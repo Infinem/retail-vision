@@ -12,11 +12,11 @@ from yolov5 import yolov5_detection
 ROOT_DIR = os.getcwd()
 
 def encode_image(image_path):
-    pil_img = Image.open(image_path, mode='r') 
-    byte_arr = io.BytesIO()
-    pil_img.save(byte_arr, format='JPEG')
-    encoded_img = base64.encodebytes(byte_arr.getvalue()).decode('ascii')
-    return encoded_img
+   with open(image_path, "rb") as image_file:
+      byte_content = image_file.read()
+      encoded_img = base64.b64encode(byte_content)
+      encoded_str = encoded_img.decode("utf-8")
+      return encoded_str
 
 def decode_image(image_string):
     image_bytes = image_string.encode("utf-8")
