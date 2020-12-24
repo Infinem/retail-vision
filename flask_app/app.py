@@ -37,7 +37,7 @@ def hello_world():
 def detect():
     if request.json:
         user_id = request.json['user_id']
-        image_bytes = decode_image(request.json['img'])
+        image_bytes = decode_image(request.json['image'])
         with open(f"./tmp/{user_id}.jpg", "wb") as image_file:
             image_file.write(image_bytes)
         try:
