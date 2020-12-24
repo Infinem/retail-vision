@@ -15,7 +15,7 @@ from yolov5.utils.plots import plot_one_box
 from yolov5.utils.torch_utils import select_device, load_classifier, time_synchronized
 
 
-def detect(image):
+def detect(user_id, image):
     source = image
     sys.path.insert(0, './yolov5')
     ROOT_DIR = os.getcwd()
@@ -84,6 +84,6 @@ def detect(image):
             # Save results (image with detections)
             if save_img:
                 if dataset.mode == 'image':
-                    cv2.imwrite(f'{save_path}/result.jpg', im0)
+                    cv2.imwrite(f'{save_path}/result_{user_id}.jpg', im0)
                 
     print(f'Done. ({time.time() - t0:.3f}s)')

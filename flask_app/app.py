@@ -23,6 +23,10 @@ def decode_image(image_string):
     image = base64.b64decode(image_bytes)
     return image
 
+def clean_tmp():
+    for f in os.listdir("./tmp"):
+        os.remove(f"./tmp/{f}")
+
 server = Flask(__name__)
 
 @server.route("/", methods=["GET", "POST"])
@@ -32,9 +36,15 @@ def hello_world():
 @server.route("/detect", methods=["POST"])
 def detect():
     if request.json:
-        image_bytes = decode_image(request.json['image'])
-        with open("./tmp/current.jpg", "wb") as image_file:
+        user_id = request.json['user_id']
+        image_bytes = decode_image(request.json['img'])
+        with open(f"./tmp/{user_id}.jpg", "wb") as image_file:
             image_file.write(image_bytes)
-        yolov5_detection.detect("./tmp/current.jpg")
-        encoded_result = encode_image("./tmp/result.jpg")
-        return jsonify({"result": encoded_result})
+        try:
+            yolov5_detection.detect(user_id, f"./tmp/{user_id}.jpg")
+            encoded_result = encode_image(f"./tmp/result_{user_id}.jpg")
+            clean_tmp()
+        except:
+            clean_tmp()
+            return {"error": "nothing to detect!"}
+        return jsonify({"user_id": user_id, "result": encoded_result})
